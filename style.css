@@ -1,0 +1,450 @@
+/*
+Theme Name: Luan Piegas
+Author: Luan Piegas
+Description: Minimal, typography-first dev blog with light/dark mode.
+Requires at least: 6.8
+Tested up to: 6.8
+Requires PHP: 7.4
+Version: 2.0.4
+License: GNU General Public License v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: luan-piegas
+*/
+
+/* ---------- Design tokens ---------- */
+:root {
+	--lp-bg: #ffffff;
+	--lp-fg: #16181d;
+	--lp-muted: #6b7280;
+	--lp-accent: #16181d;
+	--lp-accent-hover: #000000;
+	--lp-border: #e5e7eb;
+	--lp-subtle: #f3f4f6;
+	--lp-code-bg: #f3f4f6;
+	--lp-header-bg: rgba(255, 255, 255, 0.9);
+	color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+	:root:not([data-theme="light"]) {
+		--lp-bg: #0f1115;
+		--lp-fg: #f5f5f5;
+		--lp-muted: #9ca3af;
+		--lp-accent: #f5f5f5;
+		--lp-accent-hover: #ffffff;
+		--lp-border: #23262d;
+		--lp-subtle: #171a21;
+		--lp-code-bg: #1a1d24;
+		--lp-header-bg: rgba(15, 17, 21, 0.9);
+		color-scheme: dark;
+	}
+}
+
+:root[data-theme="dark"] {
+	--lp-bg: #0f1115;
+	--lp-fg: #f5f5f5;
+	--lp-muted: #9ca3af;
+	--lp-accent: #f5f5f5;
+	--lp-accent-hover: #ffffff;
+	--lp-border: #23262d;
+	--lp-subtle: #171a21;
+	--lp-code-bg: #1a1d24;
+	--lp-header-bg: rgba(15, 17, 21, 0.9);
+	color-scheme: dark;
+}
+
+/* ---------- Base ---------- */
+html {
+	scroll-behavior: smooth;
+}
+
+body {
+	background: var(--lp-bg);
+	color: var(--lp-fg);
+	-webkit-font-smoothing: antialiased;
+}
+
+a {
+	text-underline-offset: 3px;
+	text-decoration-thickness: 1px;
+}
+
+a:hover {
+	color: var(--lp-accent-hover);
+}
+
+/* Guard: headings always follow the theme (even if Site Editor
+   customizations try to pin a fixed color). */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.wp-block-heading,
+.wp-block-post-title {
+	color: var(--lp-fg);
+}
+
+::selection {
+	background: var(--lp-fg);
+	color: var(--lp-bg);
+}
+
+/* ---------- Header ---------- */
+.lp-site-header {
+	border-bottom: 1px solid var(--lp-border);
+	background: var(--lp-header-bg);
+	backdrop-filter: blur(8px);
+	position: sticky;
+	top: 0;
+	z-index: 50;
+}
+
+.lp-site-header .wp-block-site-title {
+	font-size: 1.125rem;
+	font-weight: 700;
+	letter-spacing: -0.01em;
+}
+
+.lp-site-header .wp-block-site-title a {
+	color: var(--lp-fg);
+	text-decoration: none;
+}
+
+.lp-site-header .wp-block-navigation {
+	font-size: 0.9375rem;
+}
+
+.lp-site-header .wp-block-navigation a {
+	color: var(--lp-muted);
+	text-decoration: none;
+}
+
+.lp-site-header .wp-block-navigation a:hover,
+.lp-site-header .wp-block-navigation .current-menu-item a {
+	color: var(--lp-fg);
+}
+
+/* Theme toggle */
+#lp-theme-toggle {
+	background: transparent;
+	border: 1px solid var(--lp-border);
+	border-radius: 999px;
+	color: var(--lp-fg);
+	cursor: pointer;
+	display: inline-grid;
+	place-items: center;
+	width: 2.1rem;
+	height: 2.1rem;
+	padding: 0;
+}
+
+#lp-theme-toggle:hover {
+	border-color: var(--lp-muted);
+}
+
+#lp-theme-toggle .lp-icon {
+	grid-area: 1 / 1;
+	display: inline-flex;
+	transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+#lp-theme-toggle .lp-icon svg {
+	display: block;
+}
+
+/* Light mode: lit bulb on, plain bulb off */
+#lp-theme-toggle .lp-icon-off {
+	opacity: 0;
+	transform: scale(0.5) rotate(-30deg);
+}
+
+@media (prefers-color-scheme: dark) {
+	html:not([data-theme="light"]) #lp-theme-toggle .lp-icon-on {
+		opacity: 0;
+		transform: scale(0.5) rotate(30deg);
+	}
+	html:not([data-theme="light"]) #lp-theme-toggle .lp-icon-off {
+		opacity: 1;
+		transform: scale(1) rotate(0deg);
+	}
+}
+
+html[data-theme="dark"] #lp-theme-toggle .lp-icon-on {
+	opacity: 0;
+	transform: scale(0.5) rotate(30deg);
+}
+
+html[data-theme="dark"] #lp-theme-toggle .lp-icon-off {
+	opacity: 1;
+	transform: scale(1) rotate(0deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	#lp-theme-toggle .lp-icon {
+		transition: none;
+	}
+}
+
+/* ---------- Post list ---------- */
+.lp-post-card {
+	border-bottom: 1px solid var(--lp-border);
+	padding: 2rem 0;
+}
+
+.lp-post-card:first-child {
+	padding-top: 0;
+}
+
+.lp-post-card .wp-block-post-title {
+	font-size: clamp(1.375rem, 1.1rem + 1vw, 1.75rem);
+	letter-spacing: -0.015em;
+	line-height: 1.3;
+	margin: 0 0 0.5rem;
+}
+
+.lp-post-card .wp-block-post-title a {
+	color: var(--lp-fg);
+	text-decoration: none;
+}
+
+.lp-post-card .wp-block-post-title a:hover {
+	color: var(--lp-accent);
+}
+
+.lp-post-meta {
+	color: var(--lp-muted);
+	font-size: 0.875rem;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.25rem 0.75rem;
+	align-items: center;
+}
+
+.lp-post-meta a {
+	color: var(--lp-muted);
+	text-decoration: none;
+}
+
+.lp-post-meta a:hover {
+	color: var(--lp-accent);
+}
+
+.lp-post-card .wp-block-read-more {
+	font-size: 0.9375rem;
+	font-weight: 600;
+	color: var(--lp-fg);
+	text-decoration: underline;
+	text-underline-offset: 3px;
+}
+
+.lp-post-card .wp-block-read-more:hover {
+	color: var(--lp-muted);
+}
+
+.lp-post-card .wp-block-post-featured-image {
+	margin: 0 0 1.25rem;
+}
+
+.lp-post-card .wp-block-post-featured-image img {
+	border-radius: 10px;
+	border: 1px solid var(--lp-border);
+}
+
+/* ---------- Single post ---------- */
+.lp-single-meta {
+	color: var(--lp-muted);
+	font-size: 0.9375rem;
+	margin: 1rem 0 2rem;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.25rem 0.75rem;
+	align-items: center;
+}
+
+.lp-single-meta a {
+	color: var(--lp-muted);
+	text-decoration: none;
+}
+
+.lp-single-meta a:hover {
+	color: var(--lp-accent);
+}
+
+.single .wp-block-post-featured-image {
+	margin-bottom: 2rem;
+}
+
+.single .wp-block-post-featured-image img {
+	border-radius: 12px;
+	border: 1px solid var(--lp-border);
+}
+
+/* ---------- Code (dev blog essentials) ---------- */
+code,
+kbd,
+.wp-block-code code {
+	font-family: ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
+	font-size: 0.875em;
+}
+
+:not(pre) > code,
+kbd {
+	background: var(--lp-code-bg);
+	border: 1px solid var(--lp-border);
+	border-radius: 6px;
+	padding: 0.15em 0.4em;
+	white-space: nowrap;
+}
+
+pre,
+.wp-block-preformatted,
+.wp-block-code {
+	background: var(--lp-code-bg);
+	border: 1px solid var(--lp-border);
+	border-radius: 10px;
+	padding: 1.25rem;
+	overflow-x: auto;
+	font-size: 0.875rem;
+	line-height: 1.65;
+}
+
+pre code,
+.wp-block-code code,
+.wp-block-preformatted {
+	background: none;
+	border: none;
+	padding: 0;
+	white-space: pre;
+}
+
+/* ---------- Prose details ---------- */
+blockquote {
+	border-left: 3px solid var(--lp-accent);
+	margin-left: 0;
+	padding: 0.25rem 0 0.25rem 1.25rem;
+	color: var(--lp-muted);
+	font-style: italic;
+}
+
+table {
+	border-collapse: collapse;
+	width: 100%;
+	font-size: 0.9375rem;
+}
+
+th,
+td {
+	border: 1px solid var(--lp-border);
+	padding: 0.6rem 0.9rem;
+	text-align: left;
+}
+
+th {
+	background: var(--lp-subtle);
+}
+
+hr,
+.wp-block-separator {
+	border: none;
+	border-top: 1px solid var(--lp-border);
+}
+
+/* ---------- Pagination ---------- */
+.wp-block-query-pagination {
+	display: flex;
+	gap: 0.5rem;
+	align-items: center;
+	justify-content: center;
+	padding: 2.5rem 0 1rem;
+	font-size: 0.9375rem;
+}
+
+.wp-block-query-pagination a {
+	color: var(--lp-muted);
+	text-decoration: none;
+	border: 1px solid var(--lp-border);
+	border-radius: 8px;
+	padding: 0.4rem 0.85rem;
+}
+
+.wp-block-query-pagination a:hover {
+	color: var(--lp-accent);
+	border-color: var(--lp-accent);
+}
+
+.wp-block-query-pagination .current {
+	font-weight: 700;
+}
+
+/* ---------- Post navigation / comments ---------- */
+.wp-block-post-navigation-link a {
+	color: var(--lp-fg);
+	text-decoration: none;
+	font-weight: 600;
+}
+
+.wp-block-post-navigation-link a:hover {
+	color: var(--lp-accent);
+}
+
+.wp-block-comments {
+	margin-top: 3rem;
+	border-top: 1px solid var(--lp-border);
+	padding-top: 2rem;
+}
+
+.wp-block-button__link,
+.wp-block-search__button,
+input[type="submit"],
+button:not(#lp-theme-toggle) {
+	border-radius: 8px;
+}
+
+/* ---------- Footer ---------- */
+.lp-site-footer {
+	border-top: 1px solid var(--lp-border);
+	color: var(--lp-muted);
+	font-size: 0.875rem;
+}
+
+.lp-site-footer a {
+	color: var(--lp-muted);
+}
+
+/* ---------- Archive headers ---------- */
+.wp-block-query-title,
+.wp-block-archive-title {
+	letter-spacing: -0.015em;
+}
+
+.wp-block-term-description {
+	color: var(--lp-muted);
+}
+
+/* ---------- Small screens ---------- */
+@media (max-width: 640px) {
+	main.wp-block-group {
+		padding-left: 1.25rem;
+		padding-right: 1.25rem;
+	}
+
+	.lp-site-header .alignwide,
+	.lp-site-footer .alignwide {
+		padding-left: 1.25rem;
+		padding-right: 1.25rem;
+	}
+
+	.lp-post-card {
+		padding-top: 1.5rem;
+		padding-bottom: 1.5rem;
+	}
+
+	pre,
+	.wp-block-preformatted,
+	.wp-block-code {
+		padding: 1rem;
+		border-radius: 8px;
+	}
+}
